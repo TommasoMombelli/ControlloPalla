@@ -22,11 +22,14 @@ class _IpRequestState extends State<IpRequest> {
           height: 300,
           child: MobileScanner(
             onDetect: (barcodes) {
-              setState(() {
-                DataManager()
-                    .setIp(barcodes.barcodes.first.displayValue?.trim() ?? '');
-              });
-              Navigator.pushNamed(context, '/coord_sender');
+              DataManager()
+                  .setIp(barcodes.barcodes.first.displayValue?.trim() ?? '');
+              if (!DataManager().getIsIpSet()) {
+                Navigator.pushNamed(context, '/coord_sender');
+                setState(() {
+                  DataManager().setIsIpSet(true);
+                });
+              }
             },
           ),
         ),

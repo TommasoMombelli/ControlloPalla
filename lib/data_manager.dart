@@ -10,6 +10,7 @@ class DataManager {
   //Variabili
   String _ip = '';
   int _port = 5000;
+  bool _isIpSet = false;
 
   void setIp(String newIp) {
     _ip = newIp;
@@ -25,5 +26,18 @@ class DataManager {
 
   int getPort() {
     return _port;
+  }
+
+  void resetIp() {
+    _ip = '';
+    _isIpSet = false;
+  }
+
+  void setIsIpSet(bool isIpSet) {
+    _isIpSet = isIpSet;
+  }
+
+  bool getIsIpSet() {
+    return _isIpSet;
   }
 }

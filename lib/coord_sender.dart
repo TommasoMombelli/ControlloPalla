@@ -14,6 +14,7 @@ class _CoordSenderState extends State<CoordSender> {
   TcpSocketConnection socketConnection =
       TcpSocketConnection(DataManager().getIp(), DataManager().getPort());
   Coord coord = Coord(x: 0, y: 0);
+  String message = '';
 
   @override
   void initState() {
@@ -26,11 +27,8 @@ class _CoordSenderState extends State<CoordSender> {
   }
 
   void startConnection() async {
-    socketConnection.enableConsolePrint(
-        true); //use this to see in the console what's happening
-    // if(await socketConnection.canConnect(5000, attempts: 3)){   //check if it's possible to connect to the endpoint
+    socketConnection.enableConsolePrint(true);
     await socketConnection.connect(5000, messageReceived, attempts: 3);
-    // }
   }
 
   @override
@@ -41,7 +39,8 @@ class _CoordSenderState extends State<CoordSender> {
           coord =
               Coord(x: details.localPosition.dx, y: details.localPosition.dy);
         });
-        socketConnection.sendMessage(coord.toJson().toString());
+        message = "${coord.toJson().toString()};";
+        socketConnection.sendMessage(message);
       },
       child: Scaffold(
         body: Center(
