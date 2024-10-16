@@ -1,4 +1,8 @@
+import 'dart:ui';
+
+import 'package:controllo_palla/coord.dart';
 import 'package:controllo_palla/coord_sender.dart';
+import 'package:controllo_palla/data_manager.dart';
 import 'package:controllo_palla/ip_request.dart';
 import 'package:flutter/material.dart';
 
@@ -39,6 +43,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    /*DataManager().setDimension(Coord(
+        x: MediaQuery.of(context).size.width,
+        y: MediaQuery.of(context).size.height));*/
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -47,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ElevatedButton(
           onPressed: () {
             Navigator.pushNamed(context, '/ip_request');
+            //Navigator.pushNamed(context, '/coord_sender');
           },
           child: const Text('Go to Coord Detect'),
         ),

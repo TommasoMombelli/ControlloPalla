@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:controllo_palla/coord.dart';
 import 'package:controllo_palla/data_manager.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +17,22 @@ class _CoordSenderState extends State<CoordSender> {
       TcpSocketConnection(DataManager().getIp(), DataManager().getPort());
   Coord coord = Coord(x: 0, y: 0);
   String message = '';
+  bool dimensionSet = false;
 
   @override
   void initState() {
     super.initState();
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+
+    // Dimensions in physical pixels (px)
+    Size size = view.physicalSize / view.devicePixelRatio;
+
+    double width = size.width;
+    double height = size.height;
+    double bottompadding = view.padding.bottom / view.devicePixelRatio;
+    double toppadding = view.padding.top / view.devicePixelRatio;
+    DataManager()
+        .setDimension(Coord(x: width, y: height + bottompadding + toppadding));
     startConnection();
   }
 
@@ -29,6 +43,8 @@ class _CoordSenderState extends State<CoordSender> {
   void startConnection() async {
     socketConnection.enableConsolePrint(true);
     await socketConnection.connect(5000, messageReceived, attempts: 3);
+    socketConnection
+        .sendMessage(DataManager().getDimension().toJson().toString());
   }
 
   @override
@@ -43,13 +59,17 @@ class _CoordSenderState extends State<CoordSender> {
         socketConnection.sendMessage(message);
       },
       child: Scaffold(
-        body: Center(
+        body: SafeArea(
+          child: Center(
             child: Column(
-          children: [
-            Text(coord.toString()),
-            Text(DataManager().getIp()),
-          ],
-        )),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(coord.toString()),
+                Text(DataManager().getIp()),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

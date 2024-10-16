@@ -17,7 +17,7 @@ class _IpRequestState extends State<IpRequest> {
         title: Text('Enter IP Address'),
       ),
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 300,
           height: 300,
           child: MobileScanner(
