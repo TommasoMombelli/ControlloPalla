@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:controllo_palla/coord.dart';
 import 'package:controllo_palla/data_manager.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +11,17 @@ class CoordSender extends StatefulWidget {
 }
 
 class _CoordSenderState extends State<CoordSender> {
+  //Variabili
+  //Connessione tramite socket server
   TcpSocketConnection socketConnection =
       TcpSocketConnection(DataManager().getIp(), DataManager().getPort());
+  //Coordinate del tocco
   Coord coord = Coord(x: 0, y: 0);
-  String message = '';
-  bool dimensionSet = false;
 
   @override
   void initState() {
     super.initState();
-    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
 
-    // Dimensions in physical pixels (px)
-    Size size = view.physicalSize / view.devicePixelRatio;
-
-    double width = size.width;
-    double height = size.height;
-    double bottompadding = view.padding.bottom / view.devicePixelRatio;
-    double toppadding = view.padding.top / view.devicePixelRatio;
-    DataManager()
-        .setDimension(Coord(x: width, y: height + bottompadding + toppadding));
     startConnection();
   }
 
@@ -40,6 +29,7 @@ class _CoordSenderState extends State<CoordSender> {
     print(msg);
   }
 
+  //Funzione per iniziare la connessione e inviare il primo messaggio di inizializzazione
   void startConnection() async {
     socketConnection.enableConsolePrint(true);
     await socketConnection.connect(5000, messageReceived, attempts: 3);
@@ -55,7 +45,8 @@ class _CoordSenderState extends State<CoordSender> {
           coord =
               Coord(x: details.localPosition.dx, y: details.localPosition.dy);
         });
-        message = "${coord.toJson().toString()};";
+        //invio delle coordinate tramite socket
+        String message = "${coord.toJson().toString()};";
         socketConnection.sendMessage(message);
       },
       child: Scaffold(
