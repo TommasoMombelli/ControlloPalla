@@ -37,12 +37,17 @@ class _IpRequestState extends State<IpRequest> {
                 }
               },
             ),
-            Positioned(
-              bottom: 20,
-              child: Text(
-                'Inquadra il QR code per impostare l\'indirizzo IP',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    'Inquadra il QR code per impostare l\'indirizzo IP',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 300,

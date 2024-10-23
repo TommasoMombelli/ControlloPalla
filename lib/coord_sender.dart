@@ -25,6 +25,14 @@ class _CoordSenderState extends State<CoordSender> {
     startConnection();
   }
 
+  @override
+  void dispose() {
+    socketConnection.sendMessage("close");
+    socketConnection.disconnect();
+    DataManager().resetIp();
+    super.dispose();
+  }
+
   void messageReceived(String msg) {
     print(msg);
   }
