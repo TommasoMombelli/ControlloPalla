@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
             primary: Colors.cyan.shade500,
             primaryContainer: Colors.cyan.shade500),
         textTheme: TextTheme(
+          titleLarge: GoogleFonts.lora(color: white, fontSize: 30),
           titleMedium: GoogleFonts.lora(color: white, fontSize: 20),
           displaySmall: GoogleFonts.lora(color: white, fontSize: 15),
           displayMedium: GoogleFonts.lora(color: white, fontSize: 20),
@@ -104,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             padding: const EdgeInsets.all(15),
             child: Text('Inizia connessione',
-                style: Theme.of(context).textTheme.displayMedium),
+                style: Theme.of(context).textTheme.displaySmall),
           ),
         ),
       ),

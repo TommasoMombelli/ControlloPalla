@@ -49,6 +49,29 @@ class _IpRequestState extends State<IpRequest> {
                 ),
               ],
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 30,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             SizedBox(
               height: 300,
               width: 300,
