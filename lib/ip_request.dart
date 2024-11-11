@@ -73,8 +73,8 @@ class _IpRequestState extends State<IpRequest> {
               ],
             ),
             SizedBox(
-              height: 300,
-              width: 300,
+              height: MediaQuery.of(context).size.width * 0.6,
+              width: MediaQuery.of(context).size.width * 0.6,
               child: CustomPaint(
                 painter: BorderPainter(
                     color: Theme.of(context).colorScheme.onSurface),

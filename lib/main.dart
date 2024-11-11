@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/services.dart';
 
 import 'package:controllo_palla/coord.dart';
 import 'package:controllo_palla/coord_sender.dart';
@@ -19,6 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /*SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);*/
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Controllo elemento puntiforme',

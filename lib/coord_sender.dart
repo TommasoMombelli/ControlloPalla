@@ -35,7 +35,10 @@ class _CoordSenderState extends State<CoordSender> {
   }
 
   void messageReceived(String msg) {
-    print(msg);
+    if (msg == "winner") {
+      //socketConnection.disconnect();
+      Navigator.of(context).pop();
+    }
   }
 
   //Funzione per iniziare la connessione e inviare il primo messaggio di inizializzazione
