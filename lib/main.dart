@@ -20,10 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);*/
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Controllo elemento puntiforme',
@@ -40,6 +39,7 @@ class MyApp extends StatelessWidget {
           displaySmall: GoogleFonts.lora(color: white, fontSize: 15),
           displayMedium: GoogleFonts.lora(color: white, fontSize: 20),
           bodyMedium: GoogleFonts.lora(color: black, fontSize: 15),
+          bodyLarge: GoogleFonts.lora(color: black, fontSize: 25),
         ),
         useMaterial3: true,
       ),

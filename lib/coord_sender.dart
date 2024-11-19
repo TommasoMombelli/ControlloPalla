@@ -18,6 +18,7 @@ class _CoordSenderState extends State<CoordSender> {
   //Coordinate del tocco
   Coord coord = Coord(x: 0, y: 0);
   bool showCursor = false;
+  bool start = false;
 
   @override
   void initState() {
@@ -36,8 +37,15 @@ class _CoordSenderState extends State<CoordSender> {
 
   void messageReceived(String msg) {
     if (msg == "winner") {
-      //socketConnection.disconnect();
-      Navigator.of(context).pop();
+      showWinnerPopup();
+    }
+    if (msg == "start") {
+      //aspetta che la telecamera si apra
+      Future.delayed(const Duration(milliseconds: 5000), () {
+        setState(() {
+          start = true;
+        });
+      });
     }
   }
 
@@ -49,8 +57,64 @@ class _CoordSenderState extends State<CoordSender> {
         .sendMessage(DataManager().getDimension().toJson().toString());
   }
 
+  void showWinnerPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Hai vinto",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          actions: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(15),
+                child:
+                    Text('OK', style: Theme.of(context).textTheme.displaySmall),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    return start ? coordDetector() : waitStart();
+  }
+
+  Widget waitStart() {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget coordDetector() {
     return GestureDetector(
       onPanStart: (details) {
         setState(() {
@@ -89,6 +153,7 @@ class _CoordSenderState extends State<CoordSender> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
+                      //showWinnerPopup();
                     },
                   ),
                 ),
