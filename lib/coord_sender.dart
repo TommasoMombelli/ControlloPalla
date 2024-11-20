@@ -59,11 +59,12 @@ class _CoordSenderState extends State<CoordSender> {
 
   void showWinnerPopup() {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Hai vinto",
+            "Hai vinto!!",
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           actions: <Widget>[
@@ -153,7 +154,6 @@ class _CoordSenderState extends State<CoordSender> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      //showWinnerPopup();
                     },
                   ),
                 ),
@@ -176,6 +176,8 @@ class _CoordSenderState extends State<CoordSender> {
                         ),
                       )
                     : Container(),
+                Text("Muovi il dito per inviare le coordinate",
+                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ),
