@@ -11,37 +11,44 @@ class CoordSender extends StatefulWidget {
 }
 
 class _CoordSenderState extends State<CoordSender> {
-  //Variabili
   //Connessione tramite socket server
   TcpSocketConnection socketConnection =
       TcpSocketConnection(DataManager().getIp(), DataManager().getPort());
   //Coordinate del tocco
   Coord coord = Coord(x: 0, y: 0);
+  //Flags per mostrare il cursore e iniziare il gioco
   bool showCursor = false;
   bool start = false;
 
   @override
   void initState() {
     super.initState();
-
+    //Connessione
     startConnection();
   }
 
   @override
   void dispose() {
+    //Invio del messagio "close" per chiudere la connessione
     socketConnection.sendMessage("close");
+    //Disconnessione
     socketConnection.disconnect();
+    //Reset dell'ip per permettere una nuova connessione
     DataManager().resetIp();
     super.dispose();
   }
 
+  //Funzione per ricevere i messaggi dal server
   void messageReceived(String msg) {
+    //In caso di vittoria viene mostrato un popup
     if (msg == "winner") {
       showWinnerPopup();
     }
+    //Messaggio necessario per iniziare ad inviare le coordinate
+    //per evitare che vengano inviate prima che il pc sia pronto
     if (msg == "start") {
-      //aspetta che la telecamera si apra
-      Future.delayed(const Duration(milliseconds: 5000), () {
+      //Aspetta che la telecamera del pc si apra
+      Future.delayed(const Duration(milliseconds: 4000), () {
         setState(() {
           start = true;
         });
@@ -53,10 +60,14 @@ class _CoordSenderState extends State<CoordSender> {
   void startConnection() async {
     socketConnection.enableConsolePrint(true);
     await socketConnection.connect(5000, messageReceived, attempts: 3);
-    socketConnection
-        .sendMessage(DataManager().getDimension().toJson().toString());
+    //Invio delle dimensioni dello schermo
+    double width = MediaQuery.of(context).size.width;
+    double totalHeight = MediaQuery.of(context).size.height;
+    Coord dimensions = Coord(x: width, y: totalHeight);
+    socketConnection.sendMessage(dimensions.toJson().toString());
   }
 
+  //Popup per la vittoria
   void showWinnerPopup() {
     showDialog(
       barrierDismissible: false,
@@ -80,7 +91,7 @@ class _CoordSenderState extends State<CoordSender> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
+                      offset: Offset(0, 3),
                     ),
                   ],
                   color: Theme.of(context).colorScheme.primaryContainer,
@@ -102,6 +113,7 @@ class _CoordSenderState extends State<CoordSender> {
     return start ? coordDetector() : waitStart();
   }
 
+  //Widget per l'attesa dell'inizio dell'invio dati
   Widget waitStart() {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -115,8 +127,10 @@ class _CoordSenderState extends State<CoordSender> {
     );
   }
 
+  //Widget per inviare le coordinate tramite socket
   Widget coordDetector() {
     return GestureDetector(
+      //Gestione del cursore
       onPanStart: (details) {
         setState(() {
           showCursor = true;
@@ -127,12 +141,13 @@ class _CoordSenderState extends State<CoordSender> {
           showCursor = false;
         });
       },
+      //Invio delle coordinate
       onPanUpdate: (details) {
         setState(() {
           coord =
               Coord(x: details.localPosition.dx, y: details.localPosition.dy);
         });
-        //invio delle coordinate tramite socket
+        //Invio delle coordinate tramite socket
         String message = "${coord.toJson().toString()};";
         socketConnection.sendMessage(message);
       },
@@ -143,6 +158,7 @@ class _CoordSenderState extends State<CoordSender> {
             child: Stack(
               alignment: Alignment.center,
               children: [
+                //Freccia per tornare indietro
                 Positioned(
                   top: 0,
                   left: 0,
@@ -157,6 +173,15 @@ class _CoordSenderState extends State<CoordSender> {
                     },
                   ),
                 ),
+                //Testo per spiegare il funzionamento
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height * 0.5,
+                  child: Text(
+                    "Muovere il dito per controllare la pallina",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                //Cursore
                 showCursor
                     ? Positioned(
                         left: coord.x - 20,
@@ -176,8 +201,6 @@ class _CoordSenderState extends State<CoordSender> {
                         ),
                       )
                     : Container(),
-                Text("Muovi il dito per inviare le coordinate",
-                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ),

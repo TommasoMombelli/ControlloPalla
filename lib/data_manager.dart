@@ -1,5 +1,3 @@
-import 'package:controllo_palla/coord.dart';
-
 class DataManager {
   DataManager._privateConstructor();
 
@@ -13,7 +11,6 @@ class DataManager {
   String _ip = '';
   int _port = 5000;
   bool _isIpSet = false;
-  Coord _dimension = Coord(x: 0, y: 0);
 
   void setIp(String newIp) {
     _ip = newIp;
@@ -42,13 +39,5 @@ class DataManager {
 
   bool getIsIpSet() {
     return _isIpSet;
-  }
-
-  void setDimension(Coord newDimension) {
-    _dimension = newDimension;
-  }
-
-  Coord getDimension() {
-    return _dimension;
   }
 }

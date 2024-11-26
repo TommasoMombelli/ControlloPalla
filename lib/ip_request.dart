@@ -13,6 +13,7 @@ class _IpRequestState extends State<IpRequest> {
   @override
   void initState() {
     super.initState();
+    //L'ip viene resettato per permettere (se necessario) una connessione con un dispositivo diverso
     DataManager().resetIp();
   }
 
@@ -24,11 +25,13 @@ class _IpRequestState extends State<IpRequest> {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            //Scanner per codici QR
             MobileScanner(
               onDetect: (barcodes) {
                 //Memorizzazione dell'ip letto
                 DataManager()
                     .setIp(barcodes.barcodes.first.displayValue?.trim() ?? '');
+                //Evita di aprire la pagina di invio coordinate più di una volta
                 if (!DataManager().getIsIpSet()) {
                   Navigator.pushNamed(context, '/coord_sender');
                   setState(() {
@@ -43,12 +46,14 @@ class _IpRequestState extends State<IpRequest> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Text(
-                    'Inquadra il QR code per impostare l\'indirizzo IP',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    'Inquadra il QR code per connettere il dispositivo',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
+            //Freccia per tornare indietro
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -72,6 +77,7 @@ class _IpRequestState extends State<IpRequest> {
                 ),
               ],
             ),
+            //Riquadro per inquadrare il codice QR
             SizedBox(
               height: MediaQuery.of(context).size.width * 0.6,
               width: MediaQuery.of(context).size.width * 0.6,
@@ -88,6 +94,7 @@ class _IpRequestState extends State<IpRequest> {
   }
 }
 
+//Classe per disegnare il riquadro per inquadrare il codice QR
 class BorderPainter extends CustomPainter {
   BorderPainter({required this.color});
 
@@ -95,9 +102,9 @@ class BorderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double sh = size.height; // for convenient shortage
-    double sw = size.width; // for convenient shortage
-    double cornerSide = sh * 0.1; // desirable value for corners side
+    double sh = size.height;
+    double sw = size.width;
+    double cornerSide = sh * 0.1;
 
     Paint paint = Paint()
       ..color = color
